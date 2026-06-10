@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { categories, isLang, labels } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  return ["zh", "en"].map((lang) => ({ params: { lang } }));
+}
+
+const langParam = Astro.params.lang;
+if (!isLang(langParam)) return Astro.redirect("/zh/archive/");
+const lang = langParam;
+const t = labels[lang];
+const items = (await getCollection("archive")).sort((a, b) => a.data.order - b.data.order);
+const categoryEntries = Object.entries(categories);
+---
+
+<BaseLayout lang={lang} title={`${t.archive} | Cai Jiayan`}>
+  <section class="archive-section page-shell">
+    <header class="section-heading">
+      <h1>{t.archiveTitle}</h1>
+      <p>{t.archiveIntro}</p>
+    </header>
+
+    <div class="filter-bar" aria-label="Archive filters">
+      <button type="button" data-filter="all" aria-pressed="true">{t.all}</button>
+      {categoryEntries.map(([key, value]) => (
+        <button type="button" data-filter={key} aria-pressed="false">{value[lang]}</button>
+      ))}
+    </div>
+
+    <div class="archive-grid" data-archive-grid>
+      {items.map((item) => (
+        <article class="archive-item" data-category={item.data.category}>
+          <a href={`/${lang}/archive/${item.id}/`}>
+            <figure>
+              <div class="archive-item__image">
+                <Image
+                  src={item.data.image}
+                  alt={lang === "zh" ? item.data.titleZh : item.data.titleEn}
+                  widths={[480, 720, 960]}
+                  sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span>{lang === "zh" ? item.data.titleZh : item.data.titleEn}</span>
+                <span>{categories[item.data.category][lang]} · {item.data.year}</span>
+              </figcaption>
+            </figure>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-filter]"));
+  const items = Array.from(document.querySelectorAll<HTMLElement>("[data-category]"));
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      buttons.forEach((candidate) => candidate.setAttribute("aria-pressed", String(candidate === button)));
+      items.forEach((item) => {
+        item.hidden = filter !== "all" && item.dataset.category !== filter;
+      });
+    });
+  });
+</script>

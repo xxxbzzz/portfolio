@@ -1,0 +1,65 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProjectCarousel from "../../../components/ProjectCarousel.astro";
+import { isLang, labels } from "../../../lib/i18n";
+import { getLocalizedProjects, getProjectPaths } from "../../../lib/projects";
+
+export async function getStaticPaths() {
+  return getProjectPaths();
+}
+
+const { entry } = Astro.props;
+const langParam = Astro.params.lang;
+if (!isLang(langParam)) return Astro.redirect("/zh/");
+const lang = langParam;
+const t = labels[lang];
+const { Content } = await render(entry);
+const allProjects = await getLocalizedProjects(lang);
+const currentIndex = allProjects.findIndex((project) => project.id === entry.id);
+const next = allProjects[(currentIndex + 1) % allProjects.length];
+const carouselImages = [entry.data.cover, ...entry.data.gallery];
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${entry.data.title} | Cai Jiayan`}
+  description={entry.data.summary}
+  pageClass="project-page"
+>
+  <article style={`--accent:${entry.data.accent}`}>
+    <header class="project-hero page-shell">
+      <div class="project-hero__copy">
+        <span class="project-number">PROJECT / {String(entry.data.order).padStart(2, "0")}</span>
+        <h1>{entry.data.title}</h1>
+        <p class="project-hero__subtitle">{entry.data.subtitle}</p>
+        {entry.data.temporaryAssets && <span class="temporary-note">{t.temporary}</span>}
+      </div>
+
+      <dl class="project-facts">
+        <div><dt>{t.year}</dt><dd>{entry.data.year}</dd></div>
+        <div><dt>{t.medium}</dt><dd>{entry.data.medium}</dd></div>
+        <div><dt>{t.role}</dt><dd>{entry.data.team.join(" / ") || "Cai Jiayan"}</dd></div>
+      </dl>
+    </header>
+
+    <div class="project-lead page-shell">
+      <ProjectCarousel
+        images={carouselImages}
+        title={entry.data.title}
+        videoUrl={entry.data.videoUrl}
+      />
+      <p>{entry.data.summary}</p>
+    </div>
+
+    <div class="project-body page-shell">
+      <Content />
+    </div>
+
+    <a class="next-project page-shell" href={`/${lang}/projects/${next.data.slug}/`}>
+      <span>{t.nextProject}</span>
+      <strong>{next.data.title}</strong>
+      <span>→</span>
+    </a>
+  </article>
+</BaseLayout>

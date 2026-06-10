@@ -1,0 +1,27 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+const { poster, url, label } = Astro.props as {
+  poster: ImageMetadata;
+  url: string;
+  label: string;
+};
+---
+
+<div class="video-poster" data-video-poster data-url={url}>
+  <Image src={poster} alt="" widths={[720, 1280, 1600]} sizes="100vw" loading="lazy" />
+  <button type="button" aria-label={label}>
+    <span>PLAY</span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll("[data-video-poster]").forEach((container) => {
+    const button = container.querySelector("button");
+    button?.addEventListener("click", () => {
+      const url = container.getAttribute("data-url");
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
+    });
+  });
+</script>

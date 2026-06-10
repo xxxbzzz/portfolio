@@ -1,0 +1,46 @@
+---
+# Duplicate this file into src/content/projects/zh/ and rename it.
+# This single Chinese file is enough to publish the project. An English file
+# with the same translationKey can be added later.
+lang: zh
+slug: new-project
+translationKey: new-project
+order: 5
+title: 项目名称
+subtitle: 一句话说明项目类型或核心命题
+summary: 这段文字会显示在首页项目图片下方，也会作为详情页开头的导语。建议控制在 80 至 150 字。
+year: "2026"
+medium: 书籍设计 / 交互设计 / 影像
+team:
+  - 蔡佳妍
+cover: "../../../assets/projects/new-project/cover.jpg"
+gallery:
+  - "../../../assets/projects/new-project/hero-01.jpg"
+  - "../../../assets/projects/new-project/hero-02.jpg"
+accent: "#acff3f"
+status: draft
+temporaryAssets: true
+# Optional. When present, video is shown before all gallery images.
+# YouTube links are embedded; other links open in a new tab.
+videoUrl: "https://youtu.be/VIDEO_ID"
+---
+
+import MediaFigure from "../../../components/MediaFigure.astro";
+import processImage from "../../../assets/projects/new-project/process-01.jpg";
+import resultImage from "../../../assets/projects/new-project/result-01.jpg";
+
+## 项目背景
+
+在这里写第一段正文。说明项目从什么问题开始、发生在什么语境中，以及你为什么选择研究它。
+
+<MediaFigure src={processImage} alt="过程图片说明" caption="调研、草图或测试过程" />
+
+## 设计过程
+
+在这里解释关键观察、设计判断和方案如何发生。推荐每段只讨论一个明确的问题。
+
+<MediaFigure src={resultImage} alt="项目结果说明" caption="最终设计或应用场景" wide />
+
+## 项目反思
+
+写下完成项目后仍然成立的问题、局限，以及下一步可能继续发展的方向。

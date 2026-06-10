@@ -1,0 +1,23 @@
+---
+import { labels, swapLang, type Lang } from "../lib/i18n";
+
+const { lang } = Astro.props as { lang: Lang };
+const t = labels[lang];
+const otherLang = lang === "zh" ? "en" : "zh";
+const otherLabel = lang === "zh" ? "EN" : "中文";
+const path = Astro.url.pathname;
+---
+
+<header class="site-header page-shell">
+  <a class="wordmark" href={`/${lang}/`} aria-label="Cai Jiayan home">
+    <span>CJY</span><i></i>
+  </a>
+  <nav aria-label="Primary navigation">
+    <a href={`/${lang}/#projects`}>{t.projects}</a>
+    <a href={`/${lang}/archive/`}>{t.archive}</a>
+    <a href={`/${lang}/info/`}>{t.info}</a>
+  </nav>
+  <a class="lang-switch" href={swapLang(path, otherLang)} hreflang={otherLang}>
+    {otherLabel}
+  </a>
+</header>

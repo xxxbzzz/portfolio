@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { isLang, labels } from "../../lib/i18n";
+import { getLocalizedProjects } from "../../lib/projects";
+
+export function getStaticPaths() {
+  return ["zh", "en"].map((lang) => ({ params: { lang } }));
+}
+
+const langParam = Astro.params.lang;
+if (!isLang(langParam)) return Astro.redirect("/zh/");
+const lang = langParam;
+const t = labels[lang];
+const projects = await getLocalizedProjects(lang);
+---
+
+<BaseLayout lang={lang}>
+  <section class="work-intro page-shell">
+    <p class="work-intro__eyebrow">Cai Jiayan / Portfolio</p>
+    <h1>{lang === "zh" ? "最近在做的项目。" : "What I have been working on."}</h1>
+    <p>{t.statement}</p>
+  </section>
+
+  <section class="projects-section page-shell" id="projects">
+    <header class="section-heading">
+      <h2>{t.featured}</h2>
+      <span>{String(projects.length).padStart(2, "0")} / Selected projects</span>
+    </header>
+
+    <div class="project-list">
+      {projects.map((project, index) => (
+        <ProjectCard project={project} index={index} lang={lang} />
+      ))}
+    </div>
+
+    <div class="archive-teaser">
+      <div class="archive-teaser__copy">
+        <h2>{t.archive}</h2>
+        <a href={`/${lang}/archive/`}>{t.archiveIntro} →</a>
+      </div>
+      <div class="archive-teaser__visual" aria-hidden="true"><span>+</span></div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProjectCarousel from "../../../components/ProjectCarousel.astro";
+import { categories, isLang, labels } from "../../../lib/i18n";
+
+export async function getStaticPaths() {
+  const items = await getCollection("archive");
+  return ["zh", "en"].flatMap((lang) =>
+    items.map((item) => ({
+      params: { lang, id: item.id },
+      props: { item }
+    }))
+  );
+}
+
+const { item } = Astro.props;
+const langParam = Astro.params.lang;
+if (!isLang(langParam)) return Astro.redirect("/zh/archive/");
+const lang = langParam;
+const t = labels[lang];
+const title = lang === "zh" ? item.data.titleZh : item.data.titleEn;
+const summary =
+  lang === "zh"
+    ? item.data.summaryZh ?? "这个小项目目前收录在归档中，作为视觉实验、短期委托或阶段性练习的一部分呈现。"
+    : item.data.summaryEn ?? "This compact project is collected in the archive as a visual experiment, short commission, or in-progress study.";
+const media = categories[item.data.category][lang];
+const carouselImages = [item.data.image, ...item.data.gallery];
+const { Content } = await render(item);
+---
+
+<BaseLayout lang={lang} title={`${title} | ${t.archive} | Cai Jiayan`} description={summary}>
+  <article class="archive-detail page-shell">
+    <a class="archive-detail__back" href={`/${lang}/archive/`}>← {t.archive}</a>
+
+    <section class="archive-detail__layout">
+      <div class="archive-detail__copy">
+        <p class="archive-detail__kicker">{media} · {item.data.year}</p>
+        <h1>{title}</h1>
+        <p>{summary}</p>
+        <dl>
+          <div><dt>{t.year}</dt><dd>{item.data.year}</dd></div>
+          <div><dt>{t.medium}</dt><dd>{media}</dd></div>
+        </dl>
+        <div class="archive-detail__body">
+          <Content />
+        </div>
+      </div>
+
+      <div class="archive-detail__media">
+        <ProjectCarousel images={carouselImages} title={title} />
+      </div>
+    </section>
+  </article>
+</BaseLayout>

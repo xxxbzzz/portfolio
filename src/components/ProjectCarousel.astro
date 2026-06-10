@@ -1,0 +1,127 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+const { images, title, videoUrl } = Astro.props as {
+  images: ImageMetadata[];
+  title: string;
+  videoUrl?: string;
+};
+
+const getYouTubeId = (url?: string) => {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "youtu.be") return parsed.pathname.slice(1);
+    if (parsed.hostname.includes("youtube.com")) return parsed.searchParams.get("v") ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const youtubeId = getYouTubeId(videoUrl);
+const hasVideo = Boolean(videoUrl);
+const itemCount = images.length + (hasVideo ? 1 : 0);
+---
+
+<div class="project-carousel" data-carousel>
+  <div class="project-carousel__main">
+    <div class="project-carousel__track">
+      {hasVideo && (
+        <figure class="project-carousel__slide project-carousel__video" data-slide aria-hidden="false">
+          {youtubeId ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0`}
+              title={`${title} video`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          ) : (
+            <a href={videoUrl} target="_blank" rel="noreferrer">
+              <Image
+                src={images[0]}
+                alt={`${title} video`}
+                widths={[720, 1080, 1600]}
+                sizes="(max-width: 760px) calc(100vw - 40px), 720px"
+              />
+              <span class="project-carousel__play">PLAY ↗</span>
+            </a>
+          )}
+        </figure>
+      )}
+
+      {images.map((image, index) => (
+        <figure
+          class="project-carousel__slide"
+          data-slide
+          aria-hidden={hasVideo || index > 0 ? "true" : "false"}
+        >
+          <Image
+            src={image}
+            alt={`${title} ${index + 1}`}
+            widths={[720, 1080, 1600]}
+            sizes="(max-width: 760px) calc(100vw - 40px), 720px"
+            loading={!hasVideo && index === 0 ? "eager" : "lazy"}
+          />
+        </figure>
+      ))}
+    </div>
+
+    {itemCount > 1 && (
+      <div class="project-carousel__controls">
+        <button type="button" data-previous aria-label="Previous media">←</button>
+        <span><b data-current>01</b> / {String(itemCount).padStart(2, "0")}</span>
+        <button type="button" data-next aria-label="Next media">→</button>
+      </div>
+    )}
+  </div>
+
+  {itemCount > 1 && (
+    <div class="project-carousel__thumbs" aria-label="Media thumbnails">
+      {hasVideo && (
+        <button type="button" data-thumbnail data-index="0" aria-current="true" aria-label="Show video">
+          <Image src={images[0]} alt="" widths={[160, 240]} sizes="120px" />
+          <span>PLAY</span>
+        </button>
+      )}
+      {images.map((image, index) => (
+        <button
+          type="button"
+          data-thumbnail
+          data-index={index + (hasVideo ? 1 : 0)}
+          aria-current={!hasVideo && index === 0 ? "true" : "false"}
+          aria-label={`Show image ${index + 1}`}
+        >
+          <Image src={image} alt="" widths={[160, 240]} sizes="120px" loading="lazy" />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll<HTMLElement>("[data-slide]")];
+    const thumbnails = [...carousel.querySelectorAll<HTMLButtonElement>("[data-thumbnail]")];
+    const current = carousel.querySelector<HTMLElement>("[data-current]");
+    let index = 0;
+
+    const show = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        slide.setAttribute("aria-hidden", String(slideIndex !== index));
+      });
+      thumbnails.forEach((thumbnail, thumbnailIndex) => {
+        thumbnail.setAttribute("aria-current", String(thumbnailIndex === index));
+      });
+      thumbnails[index]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+      if (current) current.textContent = String(index + 1).padStart(2, "0");
+    };
+
+    thumbnails.forEach((thumbnail) => {
+      thumbnail.addEventListener("click", () => show(Number(thumbnail.dataset.index)));
+    });
+    carousel.querySelector("[data-previous]")?.addEventListener("click", () => show(index - 1));
+    carousel.querySelector("[data-next]")?.addEventListener("click", () => show(index + 1));
+  });
+</script>

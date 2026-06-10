@@ -1,0 +1,52 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import type { Lang } from "../lib/i18n";
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  image?: string;
+  pageClass?: string;
+}
+
+const {
+  lang,
+  title = lang === "zh" ? "蔡佳妍 | 设计作品集" : "Cai Jiayan | Design Portfolio",
+  description = lang === "zh"
+    ? "蔡佳妍的跨媒介设计作品集，涵盖出版、交互、影像与空间体验。"
+    : "The cross-media design portfolio of Cai Jiayan, spanning publishing, interaction, moving image and spatial experience.",
+  image = "/og-default.svg",
+  pageClass = ""
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#080808" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:url" content={Astro.url} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={Astro.url} />
+    <title>{title}</title>
+  </head>
+  <body class={pageClass}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header lang={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer page-shell">
+      <p>© {new Date().getFullYear()} Cai Jiayan</p>
+      <a href="mailto:candycaicai126@163.com">candycaicai126@163.com</a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isLang, labels } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  return ["zh", "en"].map((lang) => ({ params: { lang } }));
+}
+
+const langParam = Astro.params.lang;
+if (!isLang(langParam)) return Astro.redirect("/zh/info/");
+const lang = langParam;
+const t = labels[lang];
+---
+
+<BaseLayout lang={lang} title={`${t.info} | Cai Jiayan`}>
+  <section class="info-page page-shell">
+    <h1>IN<br />FO.</h1>
+    <div class="info-page__copy">
+      <p>{t.infoBody}</p>
+      <a href="mailto:candycaicai126@163.com">{t.email}: candycaicai126@163.com ↗</a>
+    </div>
+  </section>
+</BaseLayout>
