@@ -43,14 +43,18 @@ const archive = defineCollection({
         "photography",
         "moving-image",
         "installation",
-        "identity"
+        "identity",
+        "graphic",
+        "product"
       ]),
       year: z.string(),
       image: image(),
       gallery: z.array(image()).default([]),
       summaryZh: z.string().optional(),
       summaryEn: z.string().optional(),
-      temporaryAsset: z.boolean().default(false)
+      hideFromArchive: z.boolean().default(false),
+      temporaryAsset: z.boolean().default(false),
+      videoUrl: z.string().url().optional()
     })
 });
 

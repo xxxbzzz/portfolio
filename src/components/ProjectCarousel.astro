@@ -2,10 +2,11 @@
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
-const { images, title, videoUrl } = Astro.props as {
+const { images, title, videoUrl, preserveAspect = false } = Astro.props as {
   images: ImageMetadata[];
   title: string;
   videoUrl?: string;
+  preserveAspect?: boolean;
 };
 
 const getYouTubeId = (url?: string) => {
@@ -22,9 +23,15 @@ const getYouTubeId = (url?: string) => {
 const youtubeId = getYouTubeId(videoUrl);
 const hasVideo = Boolean(videoUrl);
 const itemCount = images.length + (hasVideo ? 1 : 0);
+const imageAspect = (image?: ImageMetadata) => image ? `${image.width} / ${image.height}` : undefined;
+const initialAspect = preserveAspect ? imageAspect(images[0]) : undefined;
 ---
 
-<div class="project-carousel" data-carousel>
+<div
+  class:list={["project-carousel", { "project-carousel--preserve-aspect": preserveAspect }]}
+  data-carousel
+  style={initialAspect ? `--carousel-aspect: ${initialAspect}` : undefined}
+>
   <div class="project-carousel__main">
     <div class="project-carousel__track">
       {hasVideo && (
@@ -54,6 +61,7 @@ const itemCount = images.length + (hasVideo ? 1 : 0);
         <figure
           class="project-carousel__slide"
           data-slide
+          data-aspect={preserveAspect ? imageAspect(image) : undefined}
           aria-hidden={hasVideo || index > 0 ? "true" : "false"}
         >
           <Image
@@ -108,6 +116,8 @@ const itemCount = images.length + (hasVideo ? 1 : 0);
 
     const show = (next: number) => {
       index = (next + slides.length) % slides.length;
+      const aspect = slides[index]?.dataset.aspect;
+      if (aspect) carousel.style.setProperty("--carousel-aspect", aspect);
       slides.forEach((slide, slideIndex) => {
         slide.setAttribute("aria-hidden", String(slideIndex !== index));
       });

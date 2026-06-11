@@ -21,9 +21,9 @@
   --text-body: 1rem;
   --text-reading: 1.06rem;
   --text-lead: 1.28rem;
-  --text-card-title: 2.7rem;
-  --text-section-title: 4rem;
-  --text-display: 6.25rem;
+  --text-card-title: 3rem;
+  --text-section-title: 3.45rem;
+  --text-display: 5.15rem;
   --sans: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   --serif: var(--sans);
 }
@@ -33,6 +33,7 @@
 }
 
 html {
+  min-height: 100%;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
@@ -40,10 +41,18 @@ html {
 }
 
 body {
+  min-height: 100vh;
   margin: 0;
+  padding-bottom: 88px;
+  display: flex;
+  flex-direction: column;
   min-width: 320px;
   overflow-x: hidden;
   background: var(--paper);
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 body::selection {
@@ -406,11 +415,19 @@ img {
 }
 
 .site-footer {
+  position: fixed;
+  z-index: 25;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  width: min(100% - 40px, 1680px);
+  margin-inline: auto;
   padding-block: 28px;
   border-top: 1px solid var(--ink);
+  background: var(--paper);
   font-size: 0.75rem;
 }
 
@@ -680,11 +697,23 @@ img {
   background: #ddd;
 }
 
+.archive-item__image--gallery {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  background: var(--paper);
+}
+
 .archive-item__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 350ms ease;
+}
+
+.archive-item__image--gallery img:first-child {
+  grid-row: 1 / -1;
 }
 
 .archive-item:hover img {
@@ -781,8 +810,50 @@ img {
   margin: 0;
 }
 
-.archive-detail__media .project-carousel__track {
-  aspect-ratio: 4 / 3;
+.archive-detail__media {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.archive-detail__video,
+.archive-detail__gallery figure {
+  display: block;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #111;
+}
+
+.archive-detail__video {
+  position: relative;
+  color: var(--paper);
+}
+
+.archive-detail__video img,
+.archive-detail__gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.archive-detail__video span {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #9cff2e;
+  border-radius: 999px;
+  background: #9cff2e;
+  color: #050505;
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 18px rgba(156, 255, 46, 0.45);
+}
+
+.archive-detail__gallery {
+  display: grid;
+  gap: var(--space-4);
 }
 
 .info-page {
@@ -1017,7 +1088,6 @@ img {
 .work-intro {
   min-height: 390px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.4fr);
   align-content: end;
   gap: var(--space-7);
   padding-block: var(--space-11) var(--space-8);
@@ -1040,15 +1110,6 @@ img {
   letter-spacing: -0.065em;
 }
 
-.work-intro > p:last-child {
-  align-self: end;
-  max-width: 34rem;
-  margin: 0;
-  color: var(--muted);
-  font-size: var(--text-lead);
-  line-height: 1.6;
-}
-
 .projects-section {
   padding-block: 0 var(--space-10);
   border-top: 1px solid var(--line);
@@ -1061,15 +1122,15 @@ img {
 }
 
 .section-heading h2 {
-  font-size: var(--text-small);
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 650;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
 .section-heading span {
   color: var(--muted);
-  font-size: var(--text-caption);
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
 }
 
 .project-list {
@@ -1206,7 +1267,8 @@ img {
 }
 
 .project-lead {
-  width: min(100% - 40px, var(--article-width));
+  width: min(100% - 80px, 1320px);
+  margin-inline: auto;
 }
 
 .project-carousel {
@@ -1245,6 +1307,20 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.archive-detail__media .project-carousel--preserve-aspect .project-carousel__track {
+  aspect-ratio: var(--carousel-aspect, 4 / 3);
+  max-height: 78vh;
+}
+
+.archive-detail__media .project-carousel--preserve-aspect .project-carousel__slide {
+  display: grid;
+  place-items: center;
+}
+
+.archive-detail__media .project-carousel--preserve-aspect .project-carousel__slide img {
+  object-fit: contain;
 }
 
 .project-carousel__video iframe,
@@ -1364,7 +1440,7 @@ img {
   margin: var(--space-10) auto var(--space-6);
   padding-top: 0;
   border-top: 0;
-  font-size: 2rem;
+  font-size: 2.25rem;
   line-height: 1.25;
   letter-spacing: -0.035em;
 }
@@ -1507,10 +1583,6 @@ img {
     font-size: 3.15rem;
   }
 
-  .work-intro > p:last-child {
-    font-size: 1.08rem;
-  }
-
   .project-card__heading > div {
     gap: var(--space-3);
   }
@@ -1538,7 +1610,7 @@ img {
   }
 
   .project-hero h1 {
-    font-size: 3.4rem;
+    font-size: 3.15rem;
   }
 
   .project-hero__subtitle,
@@ -1548,7 +1620,7 @@ img {
 
   .project-body > h2 {
     margin-top: var(--space-8);
-    font-size: 1.55rem;
+    font-size: 1.75rem;
   }
 
   .archive-detail {
@@ -1560,7 +1632,7 @@ img {
   }
 
   .archive-detail h1 {
-    font-size: 2.75rem;
+    font-size: 2.55rem;
   }
 
   .project-lead,

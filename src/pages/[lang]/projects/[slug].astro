@@ -2,7 +2,7 @@
 import { render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProjectCarousel from "../../../components/ProjectCarousel.astro";
-import { isLang, labels } from "../../../lib/i18n";
+import { isLang, labels, sitePath } from "../../../lib/i18n";
 import { getLocalizedProjects, getProjectPaths } from "../../../lib/projects";
 
 export async function getStaticPaths() {
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const langParam = Astro.params.lang;
-if (!isLang(langParam)) return Astro.redirect("/zh/");
+if (!isLang(langParam)) return Astro.redirect(sitePath("/zh/"));
 const lang = langParam;
 const t = labels[lang];
 const { Content } = await render(entry);
@@ -56,7 +56,7 @@ const carouselImages = [entry.data.cover, ...entry.data.gallery];
       <Content />
     </div>
 
-    <a class="next-project page-shell" href={`/${lang}/projects/${next.data.slug}/`}>
+    <a class="next-project page-shell" href={sitePath(`/${lang}/projects/${next.data.slug}/`)}>
       <span>{t.nextProject}</span>
       <strong>{next.data.title}</strong>
       <span>→</span>

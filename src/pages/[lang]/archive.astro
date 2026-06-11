@@ -2,17 +2,19 @@
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { categories, isLang, labels } from "../../lib/i18n";
+import { categories, isLang, labels, sitePath } from "../../lib/i18n";
 
 export function getStaticPaths() {
   return ["zh", "en"].map((lang) => ({ params: { lang } }));
 }
 
 const langParam = Astro.params.lang;
-if (!isLang(langParam)) return Astro.redirect("/zh/archive/");
+if (!isLang(langParam)) return Astro.redirect(sitePath("/zh/archive/"));
 const lang = langParam;
 const t = labels[lang];
-const items = (await getCollection("archive")).sort((a, b) => a.data.order - b.data.order);
+const items = (await getCollection("archive"))
+  .filter((item) => !item.data.hideFromArchive)
+  .sort((a, b) => a.data.order - b.data.order);
 const categoryEntries = Object.entries(categories);
 ---
 
@@ -31,27 +33,34 @@ const categoryEntries = Object.entries(categories);
     </div>
 
     <div class="archive-grid" data-archive-grid>
-      {items.map((item) => (
-        <article class="archive-item" data-category={item.data.category}>
-          <a href={`/${lang}/archive/${item.id}/`}>
-            <figure>
-              <div class="archive-item__image">
-                <Image
-                  src={item.data.image}
-                  alt={lang === "zh" ? item.data.titleZh : item.data.titleEn}
-                  widths={[480, 720, 960]}
-                  sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
-                  loading="lazy"
-                />
-              </div>
-              <figcaption>
-                <span>{lang === "zh" ? item.data.titleZh : item.data.titleEn}</span>
-                <span>{categories[item.data.category][lang]} · {item.data.year}</span>
-              </figcaption>
-            </figure>
-          </a>
-        </article>
-      ))}
+      {items.map((item) => {
+        const previewImages = [item.data.image, ...item.data.gallery].slice(0, 3);
+        const title = lang === "zh" ? item.data.titleZh : item.data.titleEn;
+
+        return (
+          <article class="archive-item" data-category={item.data.category}>
+            <a href={sitePath(`/${lang}/archive/${item.id}/`)}>
+              <figure>
+                <div class:list={["archive-item__image", { "archive-item__image--gallery": previewImages.length > 1 }]}>
+                  {previewImages.map((image, index) => (
+                    <Image
+                      src={image}
+                      alt={index === 0 ? title : ""}
+                      widths={[360, 480, 720, 960]}
+                      sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                      loading="lazy"
+                    />
+                  ))}
+                </div>
+                <figcaption>
+                  <span>{title}</span>
+                  <span>{categories[item.data.category][lang]} · {item.data.year}</span>
+                </figcaption>
+              </figure>
+            </a>
+          </article>
+        );
+      })}
     </div>
   </section>
 </BaseLayout>

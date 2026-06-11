@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import type { Lang } from "../lib/i18n";
-import { labels } from "../lib/i18n";
+import { labels, sitePath } from "../lib/i18n";
 
 const { project, index, lang } = Astro.props as {
   project: CollectionEntry<"projects">;
@@ -13,7 +13,7 @@ const data = project.data;
 ---
 
 <article class="project-card" style={`--accent:${data.accent}`}>
-  <a href={`/${lang}/projects/${data.slug}/`} aria-label={`${labels[lang].readProject}: ${data.title}`}>
+  <a href={sitePath(`/${lang}/projects/${data.slug}/`)} aria-label={`${labels[lang].readProject}: ${data.title}`}>
     <div class="project-card__heading">
       <div>
         <span class="project-card__index">{String(index + 1).padStart(2, "0")}</span>

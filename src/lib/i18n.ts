@@ -55,13 +55,29 @@ export const categories = {
   photography: { zh: "摄影", en: "Photography" },
   "moving-image": { zh: "影像", en: "Moving Image" },
   installation: { zh: "装置", en: "Installation" },
-  identity: { zh: "视觉识别", en: "Identity" }
+  identity: { zh: "视觉识别", en: "Identity" },
+  graphic: { zh: "图形", en: "Graphic" },
+  product: { zh: "产品", en: "Product" }
 } as const;
 
 export function isLang(value: string | undefined): value is Lang {
   return value === "zh" || value === "en";
 }
 
+export function sitePath(path: string) {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${normalizedPath}`;
+}
+
+export function stripBase(pathname: string) {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  if (base && pathname.startsWith(base)) {
+    return pathname.slice(base.length) || "/";
+  }
+  return pathname;
+}
+
 export function swapLang(pathname: string, lang: Lang) {
-  return pathname.replace(/^\/(zh|en)(?=\/|$)/, `/${lang}`);
+  return sitePath(stripBase(pathname).replace(/^\/(zh|en)(?=\/|$)/, `/${lang}`));
 }

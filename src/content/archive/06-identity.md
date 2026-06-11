@@ -1,6 +1,6 @@
 ---
 order: 6
-titleZh: 舞林群英会视觉识别
+titleZh: 舞林群英会logo
 titleEn: Dance Gathering Identity
 category: identity
 year: "2025"
