@@ -21,8 +21,9 @@ const {
   <Image
     src={src}
     alt={alt}
-    widths={[640, 960, 1440, 1920]}
-    sizes="(max-width: 760px) calc(100vw - 40px), 720px"
+    widths={[960, 1440, 1920, 2560, 3200]}
+    sizes="(max-width: 760px) calc(100vw - 40px), min(var(--article-width), calc(100vw - 80px))"
+    quality={95}
     loading="lazy"
   />
   {(caption || temporary) && (

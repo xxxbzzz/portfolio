@@ -48,8 +48,9 @@ const initialAspect = preserveAspect ? imageAspect(images[0]) : undefined;
               <Image
                 src={images[0]}
                 alt={`${title} video`}
-                widths={[720, 1080, 1600]}
-                sizes="(max-width: 760px) calc(100vw - 40px), 720px"
+                widths={[960, 1440, 1920, 2560, 3200]}
+                sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 80px))"
+                quality={95}
               />
               <span class="project-carousel__play">PLAY ↗</span>
             </a>
@@ -67,8 +68,9 @@ const initialAspect = preserveAspect ? imageAspect(images[0]) : undefined;
           <Image
             src={image}
             alt={`${title} ${index + 1}`}
-            widths={[720, 1080, 1600]}
-            sizes="(max-width: 760px) calc(100vw - 40px), 720px"
+            widths={[960, 1440, 1920, 2560, 3200]}
+            sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 80px))"
+            quality={95}
             loading={!hasVideo && index === 0 ? "eager" : "lazy"}
           />
         </figure>

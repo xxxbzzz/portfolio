@@ -1,0 +1,31 @@
+---
+const {
+  src,
+  caption,
+  poster,
+  wide = false
+} = Astro.props as {
+  src: string;
+  caption?: string;
+  poster?: string;
+  wide?: boolean;
+};
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const withBase = (path: string) => `${base}${path.startsWith("/") ? path : `/${path}`}`;
+---
+
+<figure class:list={["media-figure", "video-figure", { "media-figure--wide": wide }]}>
+  <video
+    src={withBase(src)}
+    poster={poster ? withBase(poster) : undefined}
+    controls
+    playsinline
+    preload="metadata"
+  ></video>
+  {caption && (
+    <figcaption>
+      <span>{caption}</span>
+    </figcaption>
+  )}
+</figure>

@@ -2,7 +2,7 @@
 lang: zh
 slug: huahua
 translationKey: huahua
-order: 6
+order: 3
 title: 画话
 subtitle: AI 辅助 OH 卡心理疗愈原型设计
 summary: 画话是一个面向年轻人的心理探索产品原型，以 OH 卡投射、绘画表达和 AI 对话引导为核心，帮助用户在日常生活中感受情绪、探索自我，并逐步培养好奇心、勇气和欣赏力。
@@ -15,8 +15,8 @@ team:
   - 罗楚原
 cover: "../../../assets/projects/huahua/cover.png"
 gallery:
-  - "../../../assets/projects/huahua/app-mockup.png"
-  - "../../../assets/projects/huahua/jiemian.png"
+  - "../../../assets/projects/huahua/frame-16.jpg"
+  - "../../../assets/projects/huahua/frame-17.jpg"
   - "../../../assets/projects/huahua/web-flow.png"
 accent: "#d8ee48"
 status: published
@@ -24,8 +24,12 @@ temporaryAssets: false
 ---
 
 import MediaFigure from "../../../components/MediaFigure.astro";
-import appMockup from "../../../assets/projects/huahua/app-mockup.png";
-import systemImage from "../../../assets/projects/huahua/jiemian.png";
+import VideoFigure from "../../../components/VideoFigure.astro";
+import frame16 from "../../../assets/projects/huahua/frame-16.jpg";
+import frame17 from "../../../assets/projects/huahua/frame-17.jpg";
+import webpage1 from "../../../assets/projects/huahua/webpage-1.jpg";
+import webpage2 from "../../../assets/projects/huahua/webpage-2.jpg";
+import webpage3 from "../../../assets/projects/huahua/webpage-3.jpg";
 import webFlow from "../../../assets/projects/huahua/web-flow.png";
 
 ## 产品概念
@@ -35,7 +39,7 @@ import webFlow from "../../../assets/projects/huahua/web-flow.png";
 产品的关键词是“感受 + 探索”。它不直接给出诊断或结论，而是通过卡片、绘画和对话帮助用户慢慢靠近自己的情绪状态。
 
 <MediaFigure
-  src={appMockup}
+  src={frame16}
   alt="画话心理疗愈 APP 界面展示"
   caption="APP 以 OH 卡、聊天和自由绘图作为核心体验"
 />
@@ -47,9 +51,15 @@ APP 结构包括画廊、欧卡、测测、自由绘图和我的五个主要入�
 项目围绕三种性格能力展开：好奇心、勇气和欣赏力。测试与练习不是一次性完成的问卷，而是被拆解进日常使用流程中，让用户在多次体验中逐步形成自己的成长轨迹。
 
 <MediaFigure
-  src={systemImage}
+  src={frame17}
   alt="画话 APP 页面结构和功能系统图"
   caption="APP 架构与功能模块梳理"
+  wide
+/>
+
+<VideoFigure
+  src="/videos/huahua/app-demo.mp4"
+  caption="APP 原型操作展示"
   wide
 />
 
@@ -59,8 +69,32 @@ APP 结构包括画廊、欧卡、测测、自由绘图和我的五个主要入�
 
 整体视觉采用来自卡牌的暖色系统、轻盈线条和点状提示元素，形成亲和、文艺、活泼的界面气质。
 
+<VideoFigure
+  src="/videos/huahua/aigc.mp4"
+  caption="AIGC宣传视频"
+  wide
+/>
+
+<MediaFigure
+  src={webpage1}
+  alt="画话网页视觉展示 1"
+  caption="网页视觉 01"
+/>
+
+<MediaFigure
+  src={webpage2}
+  alt="画话网页视觉展示 2"
+  caption="网页视觉 02"
+/>
+
+<MediaFigure
+  src={webpage3}
+  alt="画话网页视觉展示 3"
+  caption="网页视觉 03"
+/>
+
 <MediaFigure
   src={webFlow}
   alt="画话网站与动态流程展示"
-  caption="网站与延展视觉流程"
+  caption="网站视觉"
 />
