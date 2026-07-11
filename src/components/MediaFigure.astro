@@ -6,7 +6,6 @@ const {
   src,
   alt = "",
   caption,
-  temporary = false,
   wide = false
 } = Astro.props as {
   src: ImageMetadata;
@@ -26,10 +25,9 @@ const {
     quality={95}
     loading="lazy"
   />
-  {(caption || temporary) && (
+  {caption && (
     <figcaption>
       <span>{caption}</span>
-      {temporary && <em>Temporary asset / 临时图片</em>}
     </figcaption>
   )}
 </figure>

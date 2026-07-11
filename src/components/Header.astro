@@ -4,7 +4,7 @@ import { labels, sitePath, swapLang, type Lang } from "../lib/i18n";
 const { lang } = Astro.props as { lang: Lang };
 const t = labels[lang];
 const otherLang = lang === "zh" ? "en" : "zh";
-const otherLabel = lang === "zh" ? "EN" : "中文";
+const otherLabel = lang === "zh" ? "EN" : "ZH";
 const path = Astro.url.pathname;
 ---
 

@@ -33,7 +33,6 @@ const carouselImages = [entry.data.cover, ...entry.data.gallery];
         <span class="project-number">PROJECT / {String(entry.data.order).padStart(2, "0")}</span>
         <h1>{entry.data.title}</h1>
         <p class="project-hero__subtitle">{entry.data.subtitle}</p>
-        {entry.data.temporaryAssets && <span class="temporary-note">{t.temporary}</span>}
       </div>
 
       <dl class="project-facts">

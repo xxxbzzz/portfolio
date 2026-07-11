@@ -518,14 +518,6 @@ img {
   margin: 0;
 }
 
-.temporary-note {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 5px 8px;
-  background: var(--accent);
-  font-size: 0.68rem;
-}
-
 .project-body {
   counter-reset: section;
   padding-block: 100px;
@@ -1252,14 +1244,6 @@ img {
   color: var(--muted);
   font-size: var(--text-lead);
   line-height: 1.6;
-}
-
-.temporary-note {
-  width: fit-content;
-  margin-top: var(--space-2);
-  border-radius: 999px;
-  background: var(--signal);
-  color: #080808;
 }
 
 .project-facts {
